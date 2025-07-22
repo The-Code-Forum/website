@@ -4,521 +4,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Code Forum - Community for Coders</title>
+    <title>The Code Forum - Build, Learn, and Collaborate</title>
+    
+    <!-- SEO and Social Sharing Meta Tags -->
+    <meta name="description" content="The Code Forum is a vibrant community where developers collaborate on open-source, share knowledge, and grow their skills. Join us to build the future of tech.">
+    <meta property="og:title" content="The Code Forum - Build, Learn, and Collaborate">
+    <meta property="og:description" content="A community for coders, by coders. Collaborate on impactful open-source projects, learn from peers, and grow your career.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.thecodeforum.com"> <!-- Replace with actual URL -->
+    <meta property="og:image" content="https://example.com/social-preview.png"> <!-- Replace with a URL to a preview image -->
+
     <!-- Font Awesome for icons -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js" defer></script>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Tailwind CSS configuration for a light theme, aligning with The Code Forum's mission
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#4F46E5', // Indigo (Strong accent for calls to action, headings)
-                        secondary: '#6366F1', // Lighter Indigo
-                        accent: '#06B6D4', // Cyan (Highlight elements)
-                        background: '#F8FAFC', // Light gray background
-                        surface: '#FFFFFF', // Pure white for cards and main content areas
-                        textdark: '#1F2937', // Dark gray for main headings and body text
-                        textmedium: '#4B5563', // Medium gray for subheadings and secondary text
-                        textlight: '#6B7280', // Lighter gray for subtle text, paragraphs
-                        borderlight: '#E5E7EB', // Very light gray for borders
-                        // Semantic colors for feedback/status
-                        success: '#10B981', // Green
-                        warning: '#F59E0B', // Amber
-                        error: '#EF4444'    // Red
+                        primary: '#4F46E5',
+                        secondary: '#6366F1',
+                        accent: '#06B6D4',
+                        background: '#F8FAFC',
+                        surface: '#FFFFFF',
+                        textdark: '#111827',
+                        textmedium: '#4B5563',
+                        textlight: '#6B7280',
+                        borderlight: '#E5E7EB'
                     },
                     fontFamily: {
-                        display: ['Space Grotesk', 'sans-serif'], // For prominent headings
-                        body: ['Inter', 'sans-serif'], // For general text, highly readable
-                        mono: ['JetBrains Mono', 'monospace'] // For code blocks
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    animation: {
+                        'gradient-bg': 'gradient-bg 15s ease infinite',
+                        'blinking-cursor': 'blinking-cursor 1s step-end infinite',
+                    },
+                    keyframes: {
+                       'gradient-bg': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        'blinking-cursor': {
+                            '0%, 100%': { opacity: 1 },
+                            '50%': { opacity: 0 },
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Importing Google Fonts for defined font families */
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+        
+        body { font-family: 'body', sans-serif; background-color: var(--tw-colors-background); color: var(--tw-colors-textmedium); line-height: 1.7; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-        /* Basic global resets */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        .glass { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(209, 213, 219, 0.5); }
+        @supports not (backdrop-filter: blur(12px)) { .glass { background: var(--tw-colors-surface); } }
 
-        /* Body styling: Light background and primary text color */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--tw-colors-background);
-            /* Using Tailwind var for consistency */
-            min-height: 100vh;
-            color: var(--tw-colors-textdark);
-            line-height: 1.6;
-            overflow-x: hidden;
-            /* Prevent horizontal scrolling */
-        }
-
-        /* Styling for card-like elements */
-        .card {
-            background: var(--tw-colors-surface);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            /* Softer shadow for light theme */
+        /* --- Scroll Animation Styles --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.revealed { opacity: 1; transform: translateY(0); }
+        
+        /* --- General Button & Card Styles --- */
+        .btn { @apply px-6 py-3 rounded-lg font-semibold transition-all transform duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2; }
+        .btn-primary { @apply btn bg-primary text-white hover:bg-secondary hover:scale-105 focus-visible:ring-primary; }
+        .btn-secondary { @apply btn bg-transparent text-primary border border-primary hover:bg-primary/10 hover:scale-105 focus-visible:ring-primary; }
+        .card { @apply bg-surface rounded-2xl p-8 shadow-lg transition-all duration-300; }
+        
+        .project-card {
+            @apply relative overflow-hidden;
             border: 1px solid var(--tw-colors-borderlight);
         }
-
-        .card:hover {
-            transform: translateY(-3px);
-            /* Subtle lift on hover */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            /* Slightly stronger shadow */
-        }
-
-        /* Styling for buttons to give them a modern, interactive feel */
-        .btn-primary {
-            @apply bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition-all transform hover:scale-105;
-        }
-
-        .btn-secondary {
-            @apply bg-transparent text-primary border border-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-all transform hover:scale-105;
-        }
-
-        /* Animated background elements (for visual interest) */
-        .bg-pattern {
+        .project-card::before {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-            /* Behind content */
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(79, 70, 229, 0.15), transparent 80%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            border-radius: inherit;
         }
+        .project-card:hover::before { opacity: 1; }
 
-        .bg-pattern div {
-            position: absolute;
-            display: block;
-            list-style: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(79, 70, 229, 0.1);
-            /* Primary color, very transparent */
-            animation: animate 25s linear infinite;
-            bottom: -150px;
-            border-radius: 50%;
-            /* Make them circles */
-        }
-
-        .bg-pattern div:nth-child(1) {
-            left: 25%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 0s;
-        }
-
-        .bg-pattern div:nth-child(2) {
-            left: 10%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 2s;
-            animation-duration: 12s;
-        }
-
-        .bg-pattern div:nth-child(3) {
-            left: 70%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 4s;
-        }
-
-        .bg-pattern div:nth-child(4) {
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: 18s;
-        }
-
-        .bg-pattern div:nth-child(5) {
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
-        }
-
-        .bg-pattern div:nth-child(6) {
-            left: 75%;
-            width: 110px;
-            height: 110px;
-            animation-delay: 3s;
-        }
-
-        .bg-pattern div:nth-child(7) {
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 7s;
-        }
-
-        .bg-pattern div:nth-child(8) {
-            left: 50%;
-            width: 25px;
-            height: 25px;
-            animation-delay: 15s;
-            animation-duration: 45s;
-        }
-
-        .bg-pattern div:nth-child(9) {
-            left: 20%;
-            width: 15px;
-            height: 15px;
-            animation-delay: 2s;
-            animation-duration: 35s;
-        }
-
-        .bg-pattern div:nth-child(10) {
-            left: 85%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 11s;
-        }
-
-        @keyframes animate {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-                border-radius: 0;
-            }
-
-            100% {
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%;
-            }
-        }
-
-        /* Glassmorphism for light theme */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(209, 213, 219, 0.5);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Section specific background */
-        .section-bg-light {
-            background-color: var(--tw-colors-surface);
+        @media (prefers-reduced-motion: reduce) {
+          .reveal, .transition-all, .transform, .animate-gradient-bg {
+            animation: none !important;
+            transition: none !important;
+          }
         }
     </style>
 </head>
 
-<body class="bg-background text-textdark">
-    <!-- Background pattern for visual interest -->
-    <div class="bg-pattern">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-
-    <!-- Header / Navigation Bar -->
-    <header class="sticky top-0 z-50 glass py-4 shadow-sm">
-        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
-            <!-- Logo and Site Title -->
-            <a href="#" class="flex items-center space-x-2">
-                <div
-                    class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-md">
+<body>
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass">
+        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between h-20">
+            <a href="#home" class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-lg">
                     <i class="fas fa-code text-white text-lg"></i>
                 </div>
-                <span class="text-textdark font-display font-bold text-xl md:text-2xl">The Code Forum</span>
+                <span class="text-textdark font-display font-bold text-2xl">The Code Forum</span>
             </a>
-
-            <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="text-textmedium hover:text-primary transition-colors font-medium">Home</a>
-                <a href="#about" class="text-textmedium hover:text-primary transition-colors font-medium">About</a>
-                <a href="#features"
-                    class="text-textmedium hover:text-primary transition-colors font-medium">Features</a>
-                <a href="#contribute"
-                    class="text-textmedium hover:text-primary transition-colors font-medium">Contribute</a>
-                <a href="#community" class="btn-primary">Join Community <i class="fas fa-arrow-right ml-2"></i></a>
+                <a href="#mission" class="text-textmedium hover:text-primary transition-colors font-medium">Mission</a>
+                <a href="#projects" class="text-textmedium hover:text-primary transition-colors font-medium">Projects</a>
+                <a href="#activity" class="text-textmedium hover:text-primary transition-colors font-medium">Activity</a>
+                <a href="#join" class="text-textmedium hover:text-primary transition-colors font-medium">Join Us</a>
+                <a href="https://github.com/The-Code-Forum" target="_blank" rel="noopener noreferrer" class="btn-primary">Get Started <i class="fas fa-arrow-right ml-2"></i></a>
             </nav>
-
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-button" class="md:hidden text-textdark focus:outline-none">
-                <i class="fas fa-bars text-xl"></i>
+            <button id="mobile-menu-button" class="md:hidden text-textdark text-2xl" aria-label="Toggle navigation" aria-controls="mobile-menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
             </button>
         </div>
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-surface/95 backdrop-blur-md border-t border-borderlight">
-            <a href="#home" class="block py-3 px-6 text-sm text-textdark hover:bg-gray-100 transition-colors">Home</a>
-            <a href="#about" class="block py-3 px-6 text-sm text-textdark hover:bg-gray-100 transition-colors">About</a>
-            <a href="#features"
-                class="block py-3 px-6 text-sm text-textdark hover:bg-gray-100 transition-colors">Features</a>
-            <a href="#contribute"
-                class="block py-3 px-6 text-sm text-textdark hover:bg-gray-100 transition-colors">Contribute</a>
-            <a href="#community" class="block py-3 px-6 text-sm text-white bg-primary hover:bg-secondary">Join
-                Community</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-borderlight">
+             <a href="#mission" class="block py-3 px-6 text-textdark hover:bg-gray-100">Mission</a>
+            <a href="#projects" class="block py-3 px-6 text-textdark hover:bg-gray-100">Projects</a>
+            <a href="#activity" class="block py-3 px-6 text-textdark hover:bg-gray-100">Activity</a>
+            <a href="#join" class="block py-3 px-6 text-textdark hover:bg-gray-100">Join Us</a>
+            <a href="https://github.com/The-Code-Forum" target="_blank" rel="noopener noreferrer" class="block py-4 px-6 text-center text-white bg-primary hover:bg-secondary">Get Started</a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home"
-        class="relative min-h-[calc(100vh-80px)] flex items-center justify-center text-center py-20 px-4 sm:px-6 z-10">
-        <div class="max-w-4xl mx-auto">
-            <p class="text-primary text-lg font-semibold mb-3 animate-fade-in-down">A Community For Coders, By Coders
-            </p>
-            <h1 class="text-5xl md:text-7xl font-display font-bold text-textdark mb-6 leading-tight animate-fade-in-up">
-                Building a Vibrant <span class="text-accent">Tech Community</span>
-            </h1>
-            <p class="text-xl md:text-2xl text-textmedium mb-10 max-w-2xl mx-auto animate-fade-in">
-                Where developers collaborate, share knowledge, and contribute to open-source projects.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up delay-200">
-                <a href="#community" class="btn-primary">
-                    Start Exploring <i class="fas fa-compass ml-2"></i>
-                </a>
-                <a href="https://github.com/The-Code-Forum" target="_blank" class="btn-secondary">
-                    <i class="fab fa-github mr-2"></i> Visit Our GitHub
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 section-bg-light">
-        <div class="container mx-auto px-4 md:px-8 text-center max-w-4xl">
-            <h2 class="text-4xl font-display font-bold text-textdark mb-4">About The Code Forum</h2>
-            <p class="text-lg text-textmedium mb-10">
-                Our vision is to foster innovation, provide a platform for aspiring developers to learn, grow, and
-                contribute. We believe in the power of collective knowledge and open collaboration.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="card p-6 text-center">
-                    <div class="text-primary text-4xl mb-4"><i class="fas fa-lightbulb"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Foster Innovation</h3>
-                    <p class="text-textlight">Encouraging new ideas and creative solutions through shared expertise.</p>
-                </div>
-                <div class="card p-6 text-center">
-                    <div class="text-accent text-4xl mb-4"><i class="fas fa-graduation-cap"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Promote Learning</h3>
-                    <p class="text-textlight">A space for continuous learning and development for all skill levels.</p>
-                </div>
-                <div class="card p-6 text-center">
-                    <div class="text-secondary text-4xl mb-4"><i class="fas fa-handshake"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Enable Collaboration</h3>
-                    <p class="text-textlight">Connecting developers to work together on exciting open-source projects.
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="relative py-24 md:py-32 overflow-hidden">
+             <div class="absolute inset-0 bg-gradient-to-br from-indigo-100 via-white to-cyan-100 -z-10 animate-gradient-bg" style="background-size: 200% 200%;"></div>
+            <div class="container mx-auto px-4 md:px-8 grid lg:grid-cols-2 gap-16 items-center">
+                <div class="text-center lg:text-left reveal">
+                    <p class="text-primary font-semibold mb-3">A Community For Coders, By Coders</p>
+                    <h1 class="text-5xl md:text-6xl font-display font-bold text-textdark leading-tight">
+                        Where <span class="text-primary">Collaboration</span> Meets <span class="text-accent">Innovation</span>.
+                    </h1>
+                    <p class="mt-6 text-xl text-textmedium max-w-xl mx-auto lg:mx-0">
+                        Join a thriving ecosystem of developers dedicated to building impactful open-source software, sharing knowledge, and growing together.
                     </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section (Aims) -->
-    <section id="features" class="py-20">
-        <div class="container mx-auto px-4 md:px-8 max-w-5xl">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-display font-bold text-textdark mb-4">What We Offer</h2>
-                <p class="text-lg text-textmedium">Key aspects that make The Code Forum unique.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Feature 1 -->
-                <div class="card p-8 flex items-start space-x-6">
-                    <div class="text-primary text-5xl flex-shrink-0"><i class="fas fa-comments"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">Engaging Discussions</h3>
-                        <p class="text-textlight">Participate in lively debates, ask questions, and share insights on a
-                            wide range of coding topics, from algorithms to frameworks.</p>
+                    <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="#join" class="btn-primary">Become a Contributor</a>
+                        <a href="#projects" class="btn-secondary">Explore Our Projects <i class="fas fa-chevron-right ml-2 text-xs"></i></a>
                     </div>
                 </div>
-                <!-- Feature 2 -->
-                <div class="card p-8 flex items-start space-x-6">
-                    <div class="text-accent text-5xl flex-shrink-0"><i class="fas fa-code-branch"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">Open-Source Collaboration
-                        </h3>
-                        <p class="text-textlight">Find and contribute to meaningful open-source projects. Work alongside
-                            experienced developers and see your code impact real applications.</p>
-                    </div>
-                </div>
-                <!-- Feature 3 -->
-                <div class="card p-8 flex items-start space-x-6">
-                    <div class="text-secondary text-5xl flex-shrink-0"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">Mentorship Programs</h3>
-                        <p class="text-textlight">Connect with mentors who can guide you through complex concepts,
-                            provide career advice, and review your code to accelerate your learning.</p>
-                    </div>
-                </div>
-                <!-- Feature 4 -->
-                <div class="card p-8 flex items-start space-x-6">
-                    <div class="text-primary text-5xl flex-shrink-0"><i class="fas fa-book-open"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">Learning Resources</h3>
-                        <p class="text-textlight">Access a curated library of tutorials, articles, and interactive tools
-                            to deepen your understanding of various programming languages and technologies.</p>
+                <div class="relative reveal" style="transition-delay: 200ms;">
+                    <div class="bg-gray-800 rounded-xl shadow-2xl p-4 font-mono text-sm text-gray-300 border border-gray-700">
+                        <div class="flex items-center space-x-2 mb-4 px-2">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <code id="code-block" class="block whitespace-pre overflow-x-auto"></code>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contribute Section -->
-    <section id="contribute" class="py-20 section-bg-light">
-        <div class="container mx-auto px-4 md:px-8 text-center max-w-4xl">
-            <h2 class="text-4xl font-display font-bold text-textdark mb-4">How to Contribute</h2>
-            <p class="text-lg text-textmedium mb-10">
-                Your contributions are vital to our community's growth. Here are several ways you can get involved:
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="p-6 card">
-                    <div class="text-accent text-5xl mb-4"><i class="fas fa-code-fork"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Fork Repositories</h3>
-                    <p class="text-textlight text-sm">Start by forking our projects on GitHub and experiment freely.</p>
-                </div>
-                <div class="p-6 card">
-                    <div class="text-primary text-5xl mb-4"><i class="fas fa-bug"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Report Issues</h3>
-                    <p class="text-textlight text-sm">Help us improve by reporting bugs or suggesting enhancements.</p>
-                </div>
-                <div class="p-6 card">
-                    <div class="text-secondary text-5xl mb-4"><i class="fas fa-pull-request"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Submit Pull Requests</h3>
-                    <p class="text-textlight text-sm">Contribute your code by submitting pull requests to our projects.
-                    </p>
-                </div>
-                <div class="p-6 card">
-                    <div class="text-accent text-5xl mb-4"><i class="fas fa-users"></i></div>
-                    <h3 class="text-xl font-display font-semibold text-textdark mb-2">Join Discussions</h3>
-                    <p class="text-textlight text-sm">Share your knowledge and learn from others in active discussions.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Community & Call to Action Section -->
-    <section id="community" class="py-20">
-        <div class="container mx-auto px-4 md:px-8 text-center max-w-4xl">
-            <h2 class="text-4xl font-display font-bold text-textdark mb-4">Ready to Join Our Community?</h2>
-            <p class="text-lg text-textmedium mb-8">
-                Become part of a growing network of passionate developers. Start collaborating, learning, and building
-                today!
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="https://github.com/The-Code-Forum" target="_blank" class="btn-primary">
-                    Sign Up / Login <i class="fas fa-user-plus ml-2"></i>
-                </a>
-                <a href="https://github.com/The-Code-Forum/community/discussions" target="_blank" class="btn-secondary">
-                    Explore Discussions <i class="fas fa-comments ml-2"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-100 py-10 border-t border-borderlight">
-        <div class="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-textmedium text-sm">
-            <!-- Footer Section 1: Logo and description -->
-            <div>
-                <a href="#" class="flex items-center space-x-2 mb-4">
-                    <div
-                        class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-md flex items-center justify-center">
-                        <i class="fas fa-code text-white text-md"></i>
+        <!-- Stats Bar -->
+        <section class="py-12 bg-surface border-y border-borderlight">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="reveal">
+                        <p class="text-4xl font-bold font-display text-primary" data-count="1200">0</p>
+                        <p class="text-textlight">Community Members</p>
                     </div>
-                    <span class="text-textdark font-display font-bold text-lg">The Code Forum</span>
-                </a>
-                <p class="text-textlight">
-                    A vibrant community dedicated to fostering innovation, learning, and collaboration among developers.
+                    <div class="reveal" style="transition-delay: 100ms;">
+                        <p class="text-4xl font-bold font-display text-primary" data-count="50">0</p>
+                        <p class="text-textlight">Open-Source Projects</p>
+                    </div>
+                    <div class="reveal" style="transition-delay: 200ms;">
+                        <p class="text-4xl font-bold font-display text-primary" data-count="8000">0</p>
+                        <p class="text-textlight">Contributions Made</p>
+                    </div>
+                    <div class="reveal" style="transition-delay: 300ms;">
+                        <p class="text-4xl font-bold font-display text-primary" data-count="15">0</p>
+                        <p class="text-textlight">Active Mentors</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Mission Section -->
+        <section id="mission" class="py-20 md:py-28" aria-labelledby="mission-heading">
+            <div class="container mx-auto px-4 md:px-8 max-w-5xl text-center">
+                <h2 id="mission-heading" class="text-4xl font-display font-bold text-textdark mb-4 reveal">Our Mission</h2>
+                <p class="text-lg text-textmedium max-w-3xl mx-auto mb-16 reveal" style="transition-delay: 100ms;">
+                    We believe that the best software is built collaboratively. Our mission is to create an inclusive and supportive environment where developers of all levels can learn from each other, contribute to meaningful projects, and push the boundaries of technology.
                 </p>
-            </div>
-
-            <!-- Footer Section 2: Quick Links -->
-            <div>
-                <h3 class="text-lg font-semibold text-textdark mb-4">Quick Links</h3>
-                <ul>
-                    <li class="mb-2"><a href="#home" class="hover:text-primary transition-colors">Home</a></li>
-                    <li class="mb-2"><a href="#about" class="hover:text-primary transition-colors">About Us</a></li>
-                    <li class="mb-2"><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
-                    <li class="mb-2"><a href="#contribute" class="hover:text-primary transition-colors">Contribute</a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Footer Section 3: Resources -->
-            <div>
-                <h3 class="text-lg font-semibold text-textdark mb-4">Resources</h3>
-                <ul>
-                    <li class="mb-2"><a href="https://github.com/The-Code-Forum/community/discussions" target="_blank"
-                            class="hover:text-primary transition-colors">Forum Discussions</a></li>
-                    <li class="mb-2"><a href="https://github.com/The-Code-Forum" target="_blank"
-                            class="hover:text-primary transition-colors">GitHub Repository</a></li>
-                    <li class="mb-2"><a href="#" class="hover:text-primary transition-colors">FAQs</a></li>
-                    <li class="mb-2"><a href="#" class="hover:text-primary transition-colors">Support</a></li>
-                </ul>
-            </div>
-
-            <!-- Footer Section 4: Connect -->
-            <div>
-                <h3 class="text-lg font-semibold text-textdark mb-4">Connect</h3>
-                <div class="flex space-x-4">
-                    <a href="https://github.com/The-Code-Forum" target="_blank"
-                        class="text-xl text-textmedium hover:text-primary transition-colors"><i
-                            class="fab fa-github"></i></a>
-                    <a href="#" class="text-xl text-textmedium hover:text-primary transition-colors"><i
-                            class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-xl text-textmedium hover:text-primary transition-colors"><i
-                            class="fab fa-linkedin"></i></a>
-                    <a href="#" class="text-xl text-textmedium hover:text-primary transition-colors"><i
-                            class="fab fa-discord"></i></a>
+                <div class="grid md:grid-cols-3 gap-8 text-left">
+                    <div class="card reveal" style="transition-delay: 200ms;">
+                        <div class="text-accent text-4xl mb-4"><i class="fas fa-lightbulb"></i></div>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Foster Innovation</h3>
+                        <p class="text-textlight">Encouraging new ideas and creative solutions through shared expertise and open discussion.</p>
+                    </div>
+                    <div class="card reveal" style="transition-delay: 300ms;">
+                        <div class="text-accent text-4xl mb-4"><i class="fas fa-graduation-cap"></i></div>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Accelerate Learning</h3>
+                        <p class="text-textlight">Providing mentorship, curated resources, and a safe space to ask questions and grow.</p>
+                    </div>
+                    <div class="card reveal" style="transition-delay: 400ms;">
+                        <div class="text-accent text-4xl mb-4"><i class="fas fa-handshake"></i></div>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Drive Collaboration</h3>
+                        <p class="text-textlight">Connecting developers to work together on exciting open-source projects that make a difference.</p>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Featured Projects Section -->
+        <section id="projects" class="py-20 md:py-28 bg-gray-50 border-y border-borderlight" aria-labelledby="projects-heading">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="projects-heading" class="text-4xl font-display font-bold text-textdark mb-4 reveal">Featured Projects</h2>
+                    <p class="text-lg text-textmedium max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">Explore some of the active projects being built by our community.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card project-card flex flex-col reveal" style="transition-delay: 200ms;">
+                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">NexusDB</h3>
+                        <p class="text-textlight mb-4 flex-grow">A lightweight, in-memory graph database for Node.js.</p>
+                        <div class="my-4"><span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">TypeScript</span><span class="inline-block bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Node.js</span></div>
+                        <div class="mt-auto pt-4 border-t border-borderlight flex items-center justify-between"><a href="#" class="btn-secondary py-2 px-4 text-sm">View on GitHub <i class="fab fa-github ml-2"></i></a><span class="text-sm text-textlight"><i class="fas fa-star text-yellow-400 mr-1"></i> 2.1k</span></div>
+                    </div>
+                    <div class="card project-card flex flex-col reveal" style="transition-delay: 300ms;">
+                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">Aura UI</h3>
+                        <p class="text-textlight mb-4 flex-grow">An accessible component library for React & Tailwind CSS.</p>
+                        <div class="my-4"><span class="inline-block bg-cyan-100 text-cyan-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">React</span><span class="inline-block bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Tailwind</span></div>
+                        <div class="mt-auto pt-4 border-t border-borderlight flex items-center justify-between"><a href="#" class="btn-secondary py-2 px-4 text-sm">View on GitHub <i class="fab fa-github ml-2"></i></a><span class="text-sm text-textlight"><i class="fas fa-star text-yellow-400 mr-1"></i> 1.8k</span></div>
+                    </div>
+                    <div class="card project-card flex flex-col reveal" style="transition-delay: 400ms;">
+                        <h3 class="text-2xl font-display font-semibold text-textdark mb-2">CodeLingo</h3>
+                        <p class="text-textlight mb-4 flex-grow">An AI-powered tool to translate code between languages.</p>
+                        <div class="my-4"><span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">Python</span><span class="inline-block bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">AI/ML</span></div>
+                        <div class="mt-auto pt-4 border-t border-borderlight flex items-center justify-between"><a href="#" class="btn-secondary py-2 px-4 text-sm">View on GitHub <i class="fab fa-github ml-2"></i></a><span class="text-sm text-textlight"><i class="fas fa-star text-yellow-400 mr-1"></i> 3.5k</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Activity Section -->
+        <section id="activity" class="py-20 md:py-28" aria-labelledby="activity-heading">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="activity-heading" class="text-4xl font-display font-bold text-textdark mb-4 reveal">Live from the Community</h2>
+                    <p class="text-lg text-textmedium max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">See what's happening right now across our projects on GitHub.</p>
+                </div>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <!-- Activity Item 1 -->
+                    <a href="#" class="block card !p-5 reveal" style="transition-delay: 200ms;">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas fa-code-commit text-2xl text-green-500"></i>
+                            <div>
+                                <p class="font-medium text-textdark">feat: Add support for custom plugins</p>
+                                <p class="text-sm text-textlight">@dev-jane pushed to <span class="font-semibold text-primary">Aura-UI</span> <span class="hidden sm:inline">- 3 minutes ago</span></p>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- Activity Item 2 -->
+                    <a href="#" class="block card !p-5 reveal" style="transition-delay: 300ms;">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas fa-bug text-2xl text-red-500"></i>
+                            <div>
+                                <p class="font-medium text-textdark">Bug: Memory leak in connection pooling</p>
+                                <p class="text-sm text-textlight">@code-ninja opened issue in <span class="font-semibold text-primary">NexusDB</span> <span class="hidden sm:inline">- 28 minutes ago</span></p>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- Activity Item 3 -->
+                    <a href="#" class="block card !p-5 reveal" style="transition-delay: 400ms;">
+                        <div class="flex items-center space-x-4">
+                             <i class="fas fa-comment-dots text-2xl text-blue-500"></i>
+                            <div>
+                                <p class="font-medium text-textdark">"Looks great! Just one small suggestion..."</p>
+                                <p class="text-sm text-textlight">@alex-rey commented on PR #112 in <span class="font-semibold text-primary">CodeLingo</span> <span class="hidden sm:inline">- 1 hour ago</span></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Join Us Section -->
+        <section id="join" class="py-20 md:py-28 bg-gray-50 border-t border-borderlight" aria-labelledby="join-heading">
+             <div class="container mx-auto px-4 md:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="join-heading" class="text-4xl font-display font-bold text-textdark mb-4 reveal">Your Journey Starts Here</h2>
+                    <p class="text-lg text-textmedium max-w-2xl mx-auto reveal" style="transition-delay: 100ms;">Ready to make an impact? Joining our community is easy. Here’s how you can get started.</p>
+                </div>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 text-center relative">
+                    <div class="card reveal" style="transition-delay: 200ms;">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold font-display shadow-lg">1</div>
+                        <i class="fas fa-compass text-4xl text-accent my-6"></i>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Explore</h3>
+                        <p class="text-textlight text-sm">Browse our GitHub repositories and discussions to find a project that excites you.</p>
+                    </div>
+                    <div class="card reveal" style="transition-delay: 300ms;">
+                         <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold font-display shadow-lg">2</div>
+                        <i class="fas fa-comments text-4xl text-accent my-6"></i>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Connect</h3>
+                        <p class="text-textlight text-sm">Introduce yourself on Discord or GitHub Discussions, and ask questions.</p>
+                    </div>
+                    <div class="card reveal" style="transition-delay: 400ms;">
+                         <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold font-display shadow-lg">3</div>
+                        <i class="fas fa-code-branch text-4xl text-accent my-6"></i>
+                        <h3 class="text-xl font-display font-semibold text-textdark mb-2">Contribute</h3>
+                        <p class="text-textlight text-sm">Start small by tackling a 'good first issue', improving docs, or submitting a PR.</p>
+                    </div>
+                </div>
+                 <div class="text-center mt-16 reveal" style="transition-delay: 500ms;">
+                     <a href="https://github.com/The-Code-Forum" target="_blank" rel="noopener noreferrer" class="btn-primary text-lg">
+                        Join us on GitHub <i class="fab fa-github ml-2"></i>
+                     </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-textdark text-gray-300 pt-16 pb-8">
+        <div class="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-sm">
+            <div class="md:col-span-2 lg:col-span-1">
+                 <a href="#home" class="flex items-center space-x-3 mb-4"><div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center"><i class="fas fa-code text-white text-lg"></i></div><span class="text-white font-display font-bold text-2xl">The Code Forum</span></a>
+                <p class="text-gray-400">A global community dedicated to collaborative software development and lifelong learning.</p>
+                 <div class="flex space-x-4 mt-6"><a href="https://github.com/The-Code-Forum" target="_blank" rel="noopener noreferrer" class="text-xl text-gray-400 hover:text-white" aria-label="GitHub"><i class="fab fa-github"></i></a><a href="#" class="text-xl text-gray-400 hover:text-white" aria-label="X (formerly Twitter)"><i class="fab fa-x-twitter"></i></a><a href="#" class="text-xl text-gray-400 hover:text-white" aria-label="Discord"><i class="fab fa-discord"></i></a></div>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2"><li><a href="#mission" class="hover:text-accent transition-colors">Our Mission</a></li><li><a href="#projects" class="hover:text-accent transition-colors">Projects</a></li><li><a href="#community" class="hover:text-accent transition-colors">Community</a></li><li><a href="#" class="hover:text-accent transition-colors">Code of Conduct</a></li></ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Resources</h3>
+                <ul class="space-y-2"><li><a href="#" class="hover:text-accent transition-colors">GitHub Discussions</a></li><li><a href="#" class="hover:text-accent transition-colors">Contribution Guide</a></li><li><a href="#" class="hover:text-accent transition-colors">Brand Assets</a></li><li><a href="#" class="hover:text-accent transition-colors">Support</a></li></ul>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-4">Stay Updated</h3>
+                <p class="text-gray-400 mb-4">Join our newsletter for project updates and community news.</p>
+                <form class="flex"><input type="email" placeholder="your@email.com" class="bg-gray-700 border-gray-600 text-white rounded-l-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent"><button type="submit" class="bg-accent text-white px-4 rounded-r-md hover:bg-cyan-500 font-semibold">Go</button></form>
+            </div>
         </div>
-        <div class="border-t border-borderlight mt-10 pt-6 text-center text-textlight text-xs">
-            <p>&copy; 2024 The Code Forum. All rights reserved.</p>
+        <div class="border-t border-gray-700 mt-12 pt-6 text-center text-gray-500 text-xs">
+            <p>&copy; 2024 The Code Forum. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Mobile Menu Toggle functionality
+            // --- Mobile Menu Toggle ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', !isHidden);
             });
-
-            // Optional: Close mobile menu when a link is clicked (for smooth scrolling)
-            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-            mobileMenuLinks.forEach(link => {
+            mobileMenu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
                 });
             });
 
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
+            // --- Scroll Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        // Animate stats counter if it's a counter element
+                        const counter = entry.target.querySelector('[data-count]');
+                        if (counter && !counter.classList.contains('is-counting')) {
+                            animateCounter(counter);
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            
+            // --- Stats Counter Animation ---
+            function animateCounter(counter) {
+                counter.classList.add('is-counting');
+                const target = +counter.getAttribute('data-count');
+                let current = 0;
+                const increment = target / 100;
+
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current).toLocaleString();
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = target.toLocaleString();
+                    }
+                };
+                updateCounter();
+            }
+            
+            // --- Hero Code Typing Animation ---
+            const codeBlock = document.getElementById('code-block');
+            const lines = [
+                `<span class="text-gray-500">// Welcome to The Code Forum!</span>`,
+                `<span class="text-cyan-400">import</span> { Community } <span class="text-cyan-400">from</span> <span class="text-yellow-400">'@code-forum/core'</span>;`,
+                ``,
+                `<span class="text-purple-400">class</span> <span class="text-green-400">NewMember</span> {`,
+                `  <span class="text-purple-400">constructor</span>(<span class="text-blue-400">name</span>, <span class="text-blue-400">passion</span>) {`,
+                `    <span class="text-red-400">this</span>.name = name;`,
+                `    <span class="text-red-400">this</span>.passion = passion;`,
+                `  }`,
+                ``,
+                `  <span class="text-green-400">join</span>() {`,
+                `    Community.<span class="text-yellow-400">add</span>(<span class="text-red-400">this</span>);`,
+                `    <span class="text-purple-400">return</span> <span class="text-yellow-400">'Let\\'s build together! 🚀'</span>;`,
+                `  }`,
+                `}`
+            ];
+            let lineIndex = 0;
+            let charIndex = 0;
+            const cursor = `<span class="animate-blinking-cursor">|</span>`;
+
+            function type() {
+                if (lineIndex < lines.length) {
+                    const currentLine = lines[lineIndex];
+                    if (charIndex < currentLine.length) {
+                        codeBlock.innerHTML = lines.slice(0, lineIndex).join('\n') + '\n' + currentLine.substring(0, charIndex + 1) + cursor;
+                        charIndex++;
+                        setTimeout(type, 30);
+                    } else {
+                        lineIndex++;
+                        charIndex = 0;
+                        setTimeout(type, 150);
+                    }
+                } else {
+                     codeBlock.innerHTML = lines.join('\n') + cursor;
+                }
+            }
+            type();
+
+            // --- Project Card Hover Effect ---
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
                 });
             });
         });
     </script>
 </body>
-
 </html>
